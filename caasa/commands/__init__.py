@@ -6,14 +6,14 @@ from .deploy import DeployCommand
 
 def configure(arguments):
     """Load command line argument parser and parse arguments.
-    
+
     Args:
         arguments (List[str]) : Command line arguments to parse.
-        
+
     Return:
         command, arguments (Command, Namespace) : The selected command and
                                                   parsed arguments.
-    
+
     """
     parser = ArgumentParser()
     commands = [

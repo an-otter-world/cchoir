@@ -8,8 +8,6 @@ class DeployCommand(Command):
 
     def configure(self, parser):
         """See Command documentation."""
-        pass
 
     def run(self, arguments):
         """See Command documentation."""
-        pass
