@@ -1,9 +1,14 @@
 """Caasa command line entry point."""
-from sys import exit
+from sys import argv
+from sys import exit as sys_exit
+
+from caasa.commands import configure
 
 def main():
-    return 0
+    """Caasa entry point."""
+    command, arguments = configure(argv[1:])
+    return command.run(arguments)
 
 if __name__ == '__main__':
-    result = main()
-    exit(result)
+    RESULT = main()
+    sys_exit(RESULT)
