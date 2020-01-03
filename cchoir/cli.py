@@ -2,7 +2,7 @@
 from sys import argv
 from sys import exit as sys_exit
 
-from caasa.commands import configure
+from cchoir.commands import configure
 
 def main():
     """Caasa entry point."""

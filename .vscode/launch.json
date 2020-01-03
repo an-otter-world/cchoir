@@ -15,7 +15,7 @@
             "name": "Python: Caasa",
             "type": "python",
             "request": "launch",
-            "module": "caasa.cli",
+            "module": "cchoir.cli",
             "args": [
                 "deploy"
             ]
