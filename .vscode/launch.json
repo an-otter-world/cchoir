@@ -8,8 +8,9 @@
             "name": "Python: Unit Tests",
             "type": "python",
             "request": "launch",
+            "justMyCode": false,
             "module": "pytest",
-            "args": ["--no-cov"]
+            "args": ["--no-cov", "--capture=no"]
         },
         {
             "name": "Python: Caasa",
