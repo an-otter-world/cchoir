@@ -3,4 +3,6 @@
 .coverage
 .env
 .pytest_cache
+build
+dist
 htmlcov
