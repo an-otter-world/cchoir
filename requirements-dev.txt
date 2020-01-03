@@ -1,5 +1,6 @@
-pydocstyle
-pylint
+-r requirements.txt
+prospector
+pyroma
 pytest
 pytest-asyncio
 pytest-cov
