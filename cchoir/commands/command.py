@@ -1,6 +1,7 @@
 """Command system base class & utilities."""
 from abc import abstractmethod
 
+
 class Command:
     """Base class for a Caasa command."""
 
@@ -10,6 +11,7 @@ class Command:
 
         Args:
             parser (ArgumentParser) : The argument parser.
+
         """
         raise NotImplementedError()
 

@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 from .command import Command
 from .deploy import DeployCommand
 
+
 def configure(arguments):
     """Load command line argument parser and parse arguments.
 

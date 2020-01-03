@@ -1,6 +1,7 @@
 """Deploy command module."""
 from .command import Command
 
+
 class DeployCommand(Command):
     """Deploys a site to LXD hosts."""
 
