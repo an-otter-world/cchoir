@@ -1,11 +1,15 @@
-"""Caasa commands module."""
+"""C-Choir commands module."""
 from argparse import ArgumentParser
+from argparse import Namespace
+from typing import List
+from typing import Tuple
 
-from .command import Command
-from .deploy import DeployCommand
+from cchoir.commands.authenticate import AuthenticateCommand
+from cchoir.commands.command import Command
+from cchoir.commands.deploy import DeployCommand
 
 
-def configure(arguments):
+def configure(arguments: List[str]) -> Tuple[Command, Namespace]:
     """Load command line argument parser and parse arguments.
 
     Args:
@@ -18,26 +22,27 @@ def configure(arguments):
     """
     parser = ArgumentParser()
     commands = [
+        AuthenticateCommand(),
         DeployCommand()
     ]
 
     command_index = {it.name: it for it in commands}
 
     subparsers = parser.add_subparsers(
-        help='Caasa command to run.',
-        dest='selected_command'
+        help='C-Choir command to run.',
+        dest='selected_command',
     )
 
     for command_it in commands:
-        subparsers.add_parser(
+        command_parser = subparsers.add_parser(
             name=command_it.name,
             description=command_it.__class__.__doc__,
             help=command_it.__class__.__doc__,
         )
-        command_it.configure(parser)
+        command_it.configure(command_parser)
 
-    arguments = parser.parse_args(arguments)
-    command_name = arguments.selected_command
+    parsed_args = parser.parse_args(arguments)
+    command_name = parsed_args.selected_command
     command = command_index[command_name]
 
-    return (command, arguments)
+    return (command, parsed_args)

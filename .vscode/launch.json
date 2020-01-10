@@ -13,7 +13,7 @@
             "args": ["--no-cov", "--capture=no"]
         },
         {
-            "name": "Python: Caasa",
+            "name": "Python: CChoir",
             "type": "python",
             "request": "launch",
             "module": "cchoir.cli",

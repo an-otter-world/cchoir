@@ -19,6 +19,7 @@ mccabe:
 pep257:
   run: true
   disable:
+    - D102
     - D203
     - D213
     - D407
@@ -33,4 +34,9 @@ pyflakes:
     - F401
 
 pyroma:
+  run: true
+
+mypy:
+  options:
+    ignore-missing-imports: true
   run: true

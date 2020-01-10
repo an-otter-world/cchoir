@@ -2,7 +2,7 @@
 from pofy import DictField
 from pofy import ObjectField
 
-from .host import HostConfig
+from cchoir.config.host import HostConfig
 
 
 class SiteConfig:

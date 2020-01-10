@@ -1,14 +1,17 @@
-"""Caasa command line entry point."""
+"""C-Choir command line entry point."""
 from sys import argv
 from sys import exit as sys_exit
 
 from cchoir.commands import configure
 
 
-def main():
-    """Caasa entry point."""
+def main() -> int:
+    """C-Choir entry point."""
     command, arguments = configure(argv[1:])
-    return command.run(arguments)
+    if command.run(arguments):
+        return 0
+
+    return 1
 
 
 if __name__ == '__main__':

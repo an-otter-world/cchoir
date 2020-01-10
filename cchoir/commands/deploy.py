@@ -1,5 +1,8 @@
 """Deploy command module."""
-from .command import Command
+from argparse import ArgumentParser
+from argparse import Namespace
+
+from cchoir.commands.command import Command
 
 
 class DeployCommand(Command):
@@ -7,8 +10,8 @@ class DeployCommand(Command):
 
     name = 'deploy'
 
-    def configure(self, parser):
-        """See Command documentation."""
+    def configure(self, parser: ArgumentParser) -> None:
+        pass
 
-    def run(self, arguments):
-        """See Command documentation."""
+    def run(self, arguments: Namespace) -> bool:
+        pass

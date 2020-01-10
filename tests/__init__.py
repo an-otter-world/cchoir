@@ -1,1 +1,1 @@
-"""Caasa unit tests."""
+"""C-Choir unit tests."""
