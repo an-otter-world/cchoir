@@ -1,13 +1,13 @@
-"""C-Choir config classes & utilities."""
+"""C-Choir core classes & utilities."""
 from pathlib import Path
 from typing import cast
 
 from pofy import load
 
-from cchoir.config.site import SiteConfig
+from cchoir.lib.site import Site
 
 
-def load_config(path: Path) -> SiteConfig:
+def load_config(path: Path) -> Site:
     """Load a site configuration.
 
     Args:
@@ -16,8 +16,8 @@ def load_config(path: Path) -> SiteConfig:
     """
     site_root = path.parent
     with open(path, 'r') as config_file:
-        return cast(SiteConfig, load(
+        return cast(Site, load(
             config_file,
-            object_class=SiteConfig,
+            object_class=Site,
             resolve_roots=[site_root]
         ))

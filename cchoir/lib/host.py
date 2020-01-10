@@ -2,7 +2,7 @@
 from pofy import StringField
 
 
-class HostConfig:
+class Host:
     """Host config object.
 
     Hosts are deployment targets, serving the LXD api.
@@ -12,5 +12,3 @@ class HostConfig:
         """Pofy fields."""
 
         address = StringField()
-        certificate_field = StringField()
-        certificate = StringField()
