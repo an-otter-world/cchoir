@@ -1,2 +1,0 @@
-hosts:
-  host_1: !import hosts/host_1.yaml

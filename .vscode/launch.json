@@ -17,8 +17,11 @@
             "type": "python",
             "request": "launch",
             "module": "cchoir.cli",
+            "justMyCode":false,
             "args": [
-                "deploy"
+                "--site", "/home/co/Projects/STJV/stjv.fr/site.yaml",
+                "authenticate",
+                "--password", "password"
             ]
         },
     ]

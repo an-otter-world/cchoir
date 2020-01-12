@@ -1,6 +1,7 @@
 """C-Choir commands module."""
 from argparse import ArgumentParser
 from argparse import Namespace
+from gettext import gettext as _
 from typing import List
 from typing import Tuple
 
@@ -40,6 +41,12 @@ def configure(arguments: List[str]) -> Tuple[Command, Namespace]:
             help=command_it.__class__.__doc__,
         )
         command_it.configure(command_parser)
+
+    parser.add_argument(
+        '--site',
+        help=_('Site definition to load'),
+        default='site.yaml'
+    )
 
     parsed_args = parser.parse_args(arguments)
     command_name = parsed_args.selected_command

@@ -20,7 +20,7 @@ class Command:
         raise NotImplementedError()
 
     @abstractmethod
-    def run(self, arguments: Namespace) -> bool:
+    async def run(self, arguments: Namespace) -> bool:
         """Run the command.
 
         Args:

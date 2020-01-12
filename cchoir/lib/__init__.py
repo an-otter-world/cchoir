@@ -7,7 +7,7 @@ from pofy import load
 from cchoir.lib.site import Site
 
 
-def load_config(path: Path) -> Site:
+def load_site(path: Path) -> Site:
     """Load a site configuration.
 
     Args:

@@ -57,7 +57,9 @@ setup(
     ],
     install_requires=[
         'aiolxd',
-        'pofy'
+        'pofy',
+        'pyopenssl',
+        'appdirs'
     ],
     author="An Otter World",
     author_email="an-otter-world@ki-dour.org",
