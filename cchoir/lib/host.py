@@ -1,10 +1,12 @@
 """Host config object."""
 from contextlib import asynccontextmanager
+from typing import Optional
 
-from aiolxd import Client
 from pofy import StringField
+from aiolxd import Client
 
 from cchoir.lib.config import Config
+
 
 class Host:
     """Host config object.
@@ -17,9 +19,12 @@ class Host:
 
         url = StringField()
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the host."""
         self.url: str = 'http://localhost:8443'
-        config = Config.load()
+
+    def deploy(self, container_pattern: Optional[str]) -> None:
+        """Deploy containers matching the given pattern."""
 
     @asynccontextmanager
     async def _get_api(self) -> Client:
@@ -32,12 +37,3 @@ class Host:
         ) as client:
             async with client.api as api:
                 yield api
-
-    async def authenticate(self, password):
-        config = Config.load()
-        cert_path = config.client_certificate
-        async with self._get_api() as api:
-            if api.auth == "trusted":
-                return
-            certificates = api.certificates
-            await certificates.add(password, cert_path)

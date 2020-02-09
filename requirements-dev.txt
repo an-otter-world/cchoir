@@ -1,4 +1,5 @@
 -r requirements.txt
+mypy
 prospector
 pyroma
 pytest

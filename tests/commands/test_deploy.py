@@ -3,8 +3,7 @@ from cchoir.commands import configure
 from cchoir.commands.deploy import DeployCommand
 
 
-def test_deploy_arguments():
+def test_deploy_arguments() -> None:
     """Check deploy command is correctly configured."""
-    arguments = ['deploy']
-    command, arguments = configure(arguments)
+    command, arguments = configure(['deploy'])
     assert isinstance(command, DeployCommand)

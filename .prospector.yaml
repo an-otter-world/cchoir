@@ -39,4 +39,5 @@ pyroma:
 mypy:
   options:
     ignore-missing-imports: true
+    strict: true
   run: true

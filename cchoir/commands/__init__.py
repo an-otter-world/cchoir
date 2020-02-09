@@ -5,7 +5,6 @@ from gettext import gettext as _
 from typing import List
 from typing import Tuple
 
-from cchoir.commands.authenticate import AuthenticateCommand
 from cchoir.commands.command import Command
 from cchoir.commands.deploy import DeployCommand
 
@@ -23,7 +22,6 @@ def configure(arguments: List[str]) -> Tuple[Command, Namespace]:
     """
     parser = ArgumentParser()
     commands = [
-        AuthenticateCommand(),
         DeployCommand()
     ]
 

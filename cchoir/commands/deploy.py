@@ -13,5 +13,5 @@ class DeployCommand(Command):
     def configure(self, parser: ArgumentParser) -> None:
         pass
 
-    def run(self, arguments: Namespace) -> bool:
-        pass
+    async def run(self, arguments: Namespace) -> bool:
+        return True

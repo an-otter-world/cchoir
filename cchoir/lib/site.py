@@ -25,6 +25,16 @@ class Site:
         """Initialize the host."""
         self.hosts: Dict[str, Host] = {}
 
+    def deploy(self, container_pattern: Optional[str] = None) -> None:
+        """Deploy all containers matching the given pattern.
+
+        Args:
+            container_pattern: Pattern container to be deployed must match.
+
+        """
+        for host in self.get_hosts():
+            host.deploy(container_pattern)
+
     def get_hosts(self, names: Optional[Iterable[str]] = None) \
             -> Iterable[Host]:
         """Get hosts with the given names.
