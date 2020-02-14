@@ -1,15 +1,17 @@
 """Host config object."""
+from asyncio import gather
 from contextlib import asynccontextmanager
-from re import Pattern
-from typing import Optional
 from typing import List
+from typing import Optional
+from typing import Pattern
+
+from aiolxd import Api
+from aiolxd import lxd_api
 
 from pofy import BoolField
 from pofy import ListField
 from pofy import ObjectField
 from pofy import StringField
-from aiolxd import Api
-from aiolxd import lxd_api
 
 from cchoir.lib.config import Config
 from cchoir.lib.instance import Instance
@@ -32,17 +34,19 @@ class Host:
 
     def __init__(self) -> None:
         """Initialize the host."""
-        self.url: str = 'http://localhost:8443'
+        self.url: str = 'https://localhost:8443'
         self.verify_host_certificate = False
         self.instances: List[Instance] = []
 
-    def deploy(self, config: Config, pattern: Optional[Pattern[str]]) -> None:
+    async def deploy(self, config: Config, pattern: Optional[Pattern[str]]) \
+            -> None:
         """Deploy instances matching the given pattern."""
         async with self._get_api(config) as api:
-            for instance in self.instances:
-                name = instance.name
-                if pattern is None or pattern.match(name):
-                    instance.deploy(api)
+            await gather(*[
+                instance.deploy(api)
+                for instance in self.instances
+                if pattern is None or pattern.match(instance.name)
+            ])
 
     @asynccontextmanager
     async def _get_api(self, config: Config) -> Api:

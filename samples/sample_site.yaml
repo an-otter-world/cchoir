@@ -1,0 +1,4 @@
+hosts:
+  host_1:
+    instances:
+      - name: test-container

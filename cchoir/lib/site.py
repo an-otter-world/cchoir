@@ -1,12 +1,17 @@
 """Site configuration class & utilities."""
+from asyncio import gather
 from gettext import gettext as _
 from logging import getLogger
+from pathlib import Path
+from typing import cast
 from typing import Dict
 from typing import Iterable
 from typing import Optional
+from typing import Pattern
 
 from pofy import DictField
 from pofy import ObjectField
+from pofy import load
 
 from cchoir.lib.config import Config
 from cchoir.lib.host import Host
@@ -26,7 +31,20 @@ class Site:
         """Initialize the host."""
         self.hosts: Dict[str, Host] = {}
 
-    def deploy(self, container_pattern: Optional[str] = None) -> None:
+    @staticmethod
+    def load(path: Path) -> 'Site':
+        """Load the site config object.
+
+        Args:
+            path: Path to the site yaml config file.
+
+        """
+        with open(path, 'r') as site_file:
+            site_content = site_file.read()
+            return cast(Site, load(site_content, Site))
+
+    async def deploy(self, container_pattern: Optional[Pattern[str]] = None) \
+            -> None:
         """Deploy all containers matching the given pattern.
 
         Args:
@@ -34,8 +52,10 @@ class Site:
 
         """
         config = Config.load()
-        for host in self.get_hosts():
-            host.deploy(container_pattern)
+        await gather(*[
+            host.deploy(config, container_pattern)
+            for host in self.get_hosts()
+        ])
 
     def get_hosts(self, names: Optional[Iterable[str]] = None) \
             -> Iterable[Host]:

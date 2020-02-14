@@ -19,9 +19,8 @@
             "module": "cchoir.cli",
             "justMyCode":false,
             "args": [
-                "--site", "/home/co/Projects/STJV/stjv.fr/site.yaml",
-                "authenticate",
-                "--password", "password"
+                "--site", "${workspaceFolder}/samples/sample_site.yaml"
+                "deploy",
             ]
         },
     ]

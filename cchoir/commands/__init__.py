@@ -6,6 +6,7 @@ from typing import List
 from typing import Tuple
 
 from cchoir.commands.command import Command
+from cchoir.commands.common import configure_common_arguments
 from cchoir.commands.deploy import DeployCommand
 
 
@@ -21,6 +22,9 @@ def configure(arguments: List[str]) -> Tuple[Command, Namespace]:
 
     """
     parser = ArgumentParser()
+
+    configure_common_arguments(parser)
+
     commands = [
         DeployCommand()
     ]
@@ -39,12 +43,6 @@ def configure(arguments: List[str]) -> Tuple[Command, Namespace]:
             help=command_it.__class__.__doc__,
         )
         command_it.configure(command_parser)
-
-    parser.add_argument(
-        '--site',
-        help=_('Site definition to load'),
-        default='site.yaml'
-    )
 
     parsed_args = parser.parse_args(arguments)
     command_name = parsed_args.selected_command
