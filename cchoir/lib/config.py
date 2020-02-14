@@ -2,7 +2,6 @@
 from pathlib import Path
 
 from appdirs import user_config_dir
-from pofy import PathField
 from pofy import load
 
 
@@ -11,9 +10,6 @@ class Config:
 
     class Schema:
         """Pofy fields."""
-
-        client_certificate = PathField()
-        client_key = PathField()
 
     @staticmethod
     def load() -> 'Config':
@@ -32,8 +28,8 @@ class Config:
 
         Give default value to config values here.
         """
-        self.client_certificate: Path = self._get_config_dir() / 'client.cert'
-        self.client_key: Path = self._get_config_dir() / 'client.key'
+        self.certificate: Path = self._get_config_dir() / 'certificate.pem'
+        self.key: Path = self._get_config_dir() / 'key.pem'
 
     @staticmethod
     def _get_config_dir() -> Path:

@@ -8,6 +8,7 @@ from typing import Optional
 from pofy import DictField
 from pofy import ObjectField
 
+from cchoir.lib.config import Config
 from cchoir.lib.host import Host
 
 _LOG = getLogger(__name__)
@@ -32,6 +33,7 @@ class Site:
             container_pattern: Pattern container to be deployed must match.
 
         """
+        config = Config.load()
         for host in self.get_hosts():
             host.deploy(container_pattern)
 
