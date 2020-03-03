@@ -4,6 +4,5 @@ hosts:
       - !type:cchoir.instances.debian.Base
         name: test-container
         packages:
-          - neovim
           - apache2
           - mariadb-server

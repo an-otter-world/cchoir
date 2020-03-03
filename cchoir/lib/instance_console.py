@@ -24,6 +24,9 @@ class InstanceConsole:
         self._env: Optional[Dict[str, str]] = None
         self._stdout: Optional[IO[bytes]] = None
         self._stderr: Optional[IO[bytes]] = None
+        instance_name = self._lxd_instance.name
+        logger_name = 'cchoir.runtime.instances.{}'.format(instance_name)
+        self.log = getLogger(logger_name)
 
     @contextmanager
     def use(
@@ -60,9 +63,11 @@ class InstanceConsole:
     def __call__(self, command_format: str, *args: str, **kwargs: str) \
             -> Awaitable[int]:
         command = command_format.format(*args, **kwargs)
+        self.log.warning('Executing %s', command)
         splitted_command = split(command)
         return _CallAwaitable(
             lxd_instance=self._lxd_instance,
+            log=self.log,
             command=splitted_command,
             env=self._env,
             stdout=self._stdout,
@@ -74,23 +79,18 @@ class _CallAwaitable:
     def __init__(
         self,
         lxd_instance: Instance,
+        log: Logger,
         command: List[str],
         env: Optional[Dict[str, str]],
         stdout: Optional[IO[bytes]],
-        stderr: Optional[IO[bytes]]
+        stderr: Optional[IO[bytes]],
     ) -> None:
         self._lxd_instance = lxd_instance
+        self.log = log
         self._command = command
         self._env = env
         self._stdout = stdout
         self._stderr = stderr
-
-    @property
-    def log(self) -> Logger:
-        """Return a logger to log instance message."""
-        instance_name = self._lxd_instance.name
-        logger_name = 'cchoir.runtime.instances.{}'.format(instance_name)
-        return getLogger(logger_name)
 
     def __await__(self) -> Generator[None, Any, int]:
         return self._process().__await__()
