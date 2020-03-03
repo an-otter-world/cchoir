@@ -1,4 +1,9 @@
 hosts:
   host_1:
     instances:
-      - name: test-container
+      - !type:cchoir.instances.debian.Base
+        name: test-container
+        packages:
+          - neovim
+          - apache2
+          - mariadb-server
