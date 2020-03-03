@@ -1,7 +1,8 @@
 """Instance config object."""
-from contextlib import asynccontextmanager
-from abc import abstractmethod
 from abc import ABC
+from abc import abstractmethod
+from contextlib import asynccontextmanager
+from logging import getLogger
 from typing import AsyncIterator
 
 from aiolxd import Api
@@ -22,6 +23,10 @@ class Instance(ABC):
     def __init__(self) -> None:
         """Initialize the instance."""
         self.name: str = ''
+
+    @property
+    def log(self):
+        return getLogger('cchoir.runtime.containers.%s' % self.name)
 
     async def deploy(self, api: Api) -> None:
         """Deploy this container."""

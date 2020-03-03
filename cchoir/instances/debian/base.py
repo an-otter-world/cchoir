@@ -26,9 +26,8 @@ class Base(Instance):
     @asynccontextmanager
     async def _setup(self, shell: InstanceConsole) -> AsyncIterator[None]:
         with shell.use(env={'DEBIAN_FRONTEND': 'noninteractive'}):
-            await shell('apt-mark showmanual '
-                        '   | xargs apt-mark auto &> /dev/null')
-            await shell('apt-get -y -qq install {}', ' '.join(self.packages),)
+            await shell('bash -c "apt-mark showmanual   | xargs apt-mark auto"')
+            await shell('apt-get -y install {}', ' '.join(self.packages),)
             yield
             shell('apt-get -y -qq autoremove --purge')
 

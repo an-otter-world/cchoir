@@ -1,12 +1,14 @@
 """Helpers for using aiolxd Instance endpoint."""
 from contextlib import contextmanager
+from logging import Logger
+from logging import getLogger
 from shlex import split
 from typing import Any
-from typing import Iterator
 from typing import Awaitable
 from typing import Dict
 from typing import Generator
 from typing import IO
+from typing import Iterator
 from typing import List
 from typing import Optional
 
@@ -83,29 +85,33 @@ class _CallAwaitable:
         self._stdout = stdout
         self._stderr = stderr
 
+    @property
+    def log(self) -> Logger:
+        """Return a logger to log instance message."""
+        instance_name = self._lxd_instance.name
+        logger_name = 'cchoir.runtime.instances.{}'.format(instance_name)
+        return getLogger(logger_name)
+
     def __await__(self) -> Generator[None, Any, int]:
         return self._process().__await__()
 
     async def _process(self) -> int:
-        stdout = stderr = None
 
-        if self._stdout is not None:
-            async def stdout_callback(data: bytes) -> None:
-                assert self._stdout is not None
+        async def stdout_callback(data: bytes) -> None:
+            self.log.warning(data.decode('utf-8'))
+            if self._stdout is not None:
                 self._stdout.write(data)
-            stdout = stdout_callback
 
-        if self._stderr is not None:
-            async def stderr_callback(data: bytes) -> None:
-                assert self._stderr is not None
+        async def stderr_callback(data: bytes) -> None:
+            self.log.error(data.decode('utf-8'))
+            if self._stderr is not None:
                 self._stderr.write(data)
-            stderr = stderr_callback
 
         result = await self._lxd_instance.exec(
             self._command,
             environment=self._env,
-            stdout=stdout,
-            stderr=stderr
+            stdout=stdout_callback,
+            stderr=stderr_callback
         )
 
         return int(result["metadata"]["return"])
