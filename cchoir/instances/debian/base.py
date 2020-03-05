@@ -32,7 +32,7 @@ class Base(Instance):
                 await shell('apt-get -y install {}', ' '.join(self.packages),)
                 yield
             with shell.log.step('clean_packages', 'Cleaning packages'):
-                shell('apt-get -y -qq autoremove --purge')
+                await shell('apt-get -y -qq autoremove --purge')
 
     @asynccontextmanager
     async def _update(self, shell: Console) -> AsyncIterator[None]:
