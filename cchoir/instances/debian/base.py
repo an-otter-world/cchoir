@@ -26,13 +26,17 @@ class Base(Instance):
     @asynccontextmanager
     async def _setup(self, shell: Console) -> AsyncIterator[None]:
         with shell.use(env={'DEBIAN_FRONTEND': 'noninteractive'}):
-            await shell('bash -c "apt-mark showmanual   | xargs apt-mark auto"')
-            await shell('apt-get -y install {}', ' '.join(self.packages),)
-            yield
-            shell('apt-get -y -qq autoremove --purge')
+            with shell.log.step('install_packages', 'Installing packages'):
+                await shell('bash -c "apt-mark showmanual |'
+                            ' xargs apt-mark auto"')
+                await shell('apt-get -y install {}', ' '.join(self.packages),)
+                yield
+            with shell.log.step('clean_packages', 'Cleaning packages'):
+                shell('apt-get -y -qq autoremove --purge')
 
     @asynccontextmanager
     async def _update(self, shell: Console) -> AsyncIterator[None]:
-        await shell('apt-get -y -qq update')
-        await shell('apt-get -y -qq dist-upgrade')
+        with shell.log.step('update_packages', 'Updating packages'):
+            await shell('apt-get -y -qq update')
+            await shell('apt-get -y -qq dist-upgrade')
         yield
