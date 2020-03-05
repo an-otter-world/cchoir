@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from shlex import split
 from typing import Any
 from typing import Awaitable
+from typing import Callable
 from typing import Dict
 from typing import Generator
 from typing import IO
@@ -61,7 +62,7 @@ class Console:
     def __call__(self, command_format: str, *args: str, **kwargs: str) \
             -> Awaitable[int]:
         command = command_format.format(*args, **kwargs)
-        self.log.warning('Executing %s', command)
+        self.log.info('Executing %s', command)
         splitted_command = split(command)
         return _CallAwaitable(
             lxd_instance=self._lxd_instance,
@@ -94,14 +95,38 @@ class _CallAwaitable:
         return self._process().__await__()
 
     async def _process(self) -> int:
+        stdout_buffer: str = ''
+        stderr_buffer: str = ''
+
+        def _log(buffer: str, data: bytes, callback: Callable[[str], None])\
+                -> str:
+            buffer += data.decode('utf-8')
+
+            if len(buffer) == 0:
+                return ''
+
+            lines = buffer.strip().split('\n')
+            if buffer[-1] != '\n':
+                buffer = lines[-1]
+                lines = lines[:-1]
+            else:
+                buffer = ''
+
+            for line in lines:
+                callback(line)
+
+            return buffer
 
         async def stdout_callback(data: bytes) -> None:
-            self.log.warning(data.decode('utf-8'))
+            nonlocal stdout_buffer
+            stdout_buffer = _log(stdout_buffer, data, self.log.info)
+
             if self._stdout is not None:
                 self._stdout.write(data)
 
         async def stderr_callback(data: bytes) -> None:
-            self.log.error(data.decode('utf-8'))
+            nonlocal stderr_buffer
+            stderr_buffer = _log(stderr_buffer, data, self.log.warning)
             if self._stderr is not None:
                 self._stderr.write(data)
 
