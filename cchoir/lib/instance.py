@@ -9,7 +9,7 @@ from aiolxd import Api
 from aiolxd import Source
 from pofy import StringField
 
-from cchoir.lib.instance_console import InstanceConsole
+from cchoir.lib.console import Console
 from cchoir.lib.log import Log
 
 
@@ -59,17 +59,17 @@ class Instance(ABC):
             await lxd_instance.start()
 
         assert self.log is not None
-        console = InstanceConsole(lxd_instance, self.log)
+        console = Console(lxd_instance, self.log)
         async with self._setup(console):
             async with self._update(console):
                 pass
 
     @abstractmethod
     @asynccontextmanager
-    async def _setup(self, shell: InstanceConsole) -> AsyncIterator[None]:
+    async def _setup(self, shell: Console) -> AsyncIterator[None]:
         yield
 
     @abstractmethod
     @asynccontextmanager
-    async def _update(self, shell: InstanceConsole) -> AsyncIterator[None]:
+    async def _update(self, shell: Console) -> AsyncIterator[None]:
         yield

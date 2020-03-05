@@ -15,7 +15,7 @@ from aiolxd import Instance
 from cchoir.lib.log import Log
 
 
-class InstanceConsole:
+class Console:
     """Wrapper around the aiolxd instance object to execute commands."""
 
     def __init__(self, lxd_instance: Instance, log: Log) -> None:

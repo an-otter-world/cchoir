@@ -7,7 +7,7 @@ from pofy import ListField
 from pofy import StringField
 
 from cchoir.lib.instance import Instance
-from cchoir.lib.instance_console import InstanceConsole
+from cchoir.lib.console import Console
 
 
 class Base(Instance):
@@ -24,7 +24,7 @@ class Base(Instance):
         self.packages: List[str] = []
 
     @asynccontextmanager
-    async def _setup(self, shell: InstanceConsole) -> AsyncIterator[None]:
+    async def _setup(self, shell: Console) -> AsyncIterator[None]:
         with shell.use(env={'DEBIAN_FRONTEND': 'noninteractive'}):
             await shell('bash -c "apt-mark showmanual   | xargs apt-mark auto"')
             await shell('apt-get -y install {}', ' '.join(self.packages),)
@@ -32,7 +32,7 @@ class Base(Instance):
             shell('apt-get -y -qq autoremove --purge')
 
     @asynccontextmanager
-    async def _update(self, shell: InstanceConsole) -> AsyncIterator[None]:
+    async def _update(self, shell: Console) -> AsyncIterator[None]:
         await shell('apt-get -y -qq update')
         await shell('apt-get -y -qq dist-upgrade')
         yield
