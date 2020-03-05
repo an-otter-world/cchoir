@@ -16,6 +16,22 @@ from aiolxd import Instance
 from cchoir.lib.log import Log
 
 
+class CommandException(Exception):
+    """Exception raised when a command fails."""
+
+    def __init__(self, command: str, return_code: int) -> None:
+        """Initialize the exception.
+
+        Args:
+            command: The command that failed.
+            return_code: Return code of the command.
+
+        """
+        super().__init__('Command %s failed.' % command)
+        self.command = command
+        self.return_code = return_code
+
+
 class Console:
     """Wrapper around the aiolxd instance object to execute commands."""
 
@@ -137,4 +153,8 @@ class _CallAwaitable:
             stderr=stderr_callback
         )
 
-        return int(result["metadata"]["return"])
+        return_value = int(result["metadata"]["return"])
+        if return_value != 0:
+            raise CommandException(' '.join(self._command), return_value)
+
+        return return_value
