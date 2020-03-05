@@ -1,7 +1,5 @@
 """Helpers for using aiolxd Instance endpoint."""
 from contextlib import contextmanager
-from logging import Logger
-from logging import getLogger
 from shlex import split
 from typing import Any
 from typing import Awaitable
@@ -14,19 +12,19 @@ from typing import Optional
 
 from aiolxd import Instance
 
+from cchoir.lib.log import Log
+
 
 class InstanceConsole:
     """Wrapper around the aiolxd instance object to execute commands."""
 
-    def __init__(self, lxd_instance: Instance) -> None:
+    def __init__(self, lxd_instance: Instance, log: Log) -> None:
         """Initialize the instance."""
         self._lxd_instance = lxd_instance
         self._env: Optional[Dict[str, str]] = None
         self._stdout: Optional[IO[bytes]] = None
         self._stderr: Optional[IO[bytes]] = None
-        instance_name = self._lxd_instance.name
-        logger_name = 'cchoir.runtime.instances.{}'.format(instance_name)
-        self.log = getLogger(logger_name)
+        self.log = log
 
     @contextmanager
     def use(
@@ -79,7 +77,7 @@ class _CallAwaitable:
     def __init__(
         self,
         lxd_instance: Instance,
-        log: Logger,
+        log: Log,
         command: List[str],
         env: Optional[Dict[str, str]],
         stdout: Optional[IO[bytes]],

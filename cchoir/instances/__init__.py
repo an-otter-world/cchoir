@@ -1,0 +1,1 @@
+"""Predefined cchoir instances."""
