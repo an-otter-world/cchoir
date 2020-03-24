@@ -1,6 +1,8 @@
 """Helpers for using aiolxd Instance endpoint."""
 from contextlib import contextmanager
+from pathlib import Path
 from shlex import split
+from string import Template
 from typing import Any
 from typing import Awaitable
 from typing import Callable
@@ -88,6 +90,30 @@ class Console:
             stdout=self._stdout,
             stderr=self._stderr
         )
+
+    def expand(
+        self,
+        template_path: Path,
+        target_path: Path,
+        uid: int = 0,
+        gid: int = 0,
+        mode: str = '0700'
+    ) -> None:
+        """Expand a configuration template in the runnig instance."""
+        with open(template_path, 'r') as template_file:
+            template = Template(template_file.read())
+
+            expanded_file = template.substitute({
+                'instance': self._lxd_instance.status
+            })
+            with self._lxd_instance.open(
+                target_path,
+                'w',
+                uid=uid,
+                gid=gid,
+                mode=mode
+            ) as instance_file:
+                instance_file.write(expanded_file)
 
 
 class _CallAwaitable:

@@ -1,8 +1,6 @@
 hosts:
   host_1:
     instances:
-      - !type:cchoir.instances.debian.Base
+      - !type:cchoir.instances.debian.Dns
         name: test-container
-        packages:
-          - apache2
-          - mariadb-server
+        configuration: local.conf

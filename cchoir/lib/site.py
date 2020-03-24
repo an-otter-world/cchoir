@@ -40,8 +40,7 @@ class Site:
 
         """
         with open(path, 'r') as site_file:
-            site_content = site_file.read()
-            return cast(Site, load(site_content, Site))
+            return cast(Site, load(site_file, Site))
 
     async def deploy(self, container_pattern: Optional[Pattern[str]] = None) \
             -> None:

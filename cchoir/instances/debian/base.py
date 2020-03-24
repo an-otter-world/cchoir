@@ -40,3 +40,6 @@ class Base(Instance):
             await shell('apt-get -y -qq update')
             await shell('apt-get -y -qq dist-upgrade')
         yield
+
+    def _post_load(self) -> None:
+        self.packages += ['sudo']

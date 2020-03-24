@@ -29,6 +29,7 @@ class Instance(ABC):
 
             """
             instance.log = Log('instances.{}'.format(instance.name))
+            instance._post_load() # pylint: disable=protected-access
 
     def __init__(self) -> None:
         """Initialize the instance."""
@@ -63,6 +64,9 @@ class Instance(ABC):
         async with self._setup(console):
             async with self._update(console):
                 pass
+
+    def _post_load(self) -> None:
+        pass
 
     @abstractmethod
     @asynccontextmanager
