@@ -1,5 +1,6 @@
 """Config helpers."""
 from pathlib import Path
+from logging import getLogger
 
 from appdirs import user_config_dir
 from pofy import load
@@ -12,7 +13,7 @@ class Config:
         """Pofy fields."""
 
     @staticmethod
-    def load() -> 'Config':
+    def load() -> 'Optional[Config]':
         """Load the user-defined config."""
         config_file_path = Config._get_config_dir() / 'config.yaml'
         if config_file_path.exists():
@@ -21,6 +22,26 @@ class Config:
             config = Config()
 
         assert isinstance(config, Config)
+
+        logger = getLogger('cchoir.core')
+        if not config.key.exists():
+            logger.error(
+                'Unable to find your client certificate key %s to'
+                ' authenticate to the LXD api, please save before'
+                ' launching C-Choir',
+                config.key
+            )
+            return None
+        if not config.certificate.exists():
+            logger.error(
+                'Unable to find your client certificate key %s to'
+                ' authenticate to the LXD api, please save before'
+                ' launching C-Choir',
+                config.certificate
+            )
+            return None
+
+        logger.debug('Loaded config file')
         return config
 
     def __init__(self) -> None:

@@ -43,7 +43,7 @@ class Site:
             return cast(Site, load(site_file, Site))
 
     async def deploy(self, container_pattern: Optional[Pattern[str]] = None) \
-            -> None:
+            -> bool:
         """Deploy all containers matching the given pattern.
 
         Args:
@@ -51,10 +51,16 @@ class Site:
 
         """
         config = Config.load()
+
+        if config is None:
+            return False
+
         await gather(*[
             host.deploy(config, container_pattern)
             for host in self.get_hosts()
         ])
+
+        return True
 
     def get_hosts(self, names: Optional[Iterable[str]] = None) \
             -> Iterable[Host]:
