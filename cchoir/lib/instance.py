@@ -3,6 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from contextlib import asynccontextmanager
 from logging import getLogger
+from logging import Logger
 from typing import AsyncIterator
 
 from aiolxd import Api
@@ -25,7 +26,8 @@ class Instance(ABC):
         self.name: str = ''
 
     @property
-    def log(self):
+    def log(self) -> Logger:
+        """Return a log usable by this instance."""
         return getLogger('cchoir.runtime.containers.%s' % self.name)
 
     async def deploy(self, api: Api) -> None:

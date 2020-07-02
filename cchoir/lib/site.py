@@ -11,6 +11,7 @@ from typing import Pattern
 
 from pofy import DictField
 from pofy import ObjectField
+from pofy import StringField
 from pofy import load
 
 from cchoir.lib.config import Config
@@ -26,6 +27,7 @@ class Site:
         """Pofy fields."""
 
         hosts = DictField(ObjectField(object_class=Host))
+        name = StringField(required=True)
 
     def __init__(self) -> None:
         """Initialize the host."""

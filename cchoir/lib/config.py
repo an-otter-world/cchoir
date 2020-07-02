@@ -5,6 +5,7 @@ from appdirs import user_config_dir
 from pofy import load
 
 
+# TODO: Rename this to LocalConfig, it's confusing.
 class Config:
     """C-Choir configuration class."""
 

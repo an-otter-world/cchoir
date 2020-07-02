@@ -1,0 +1,11 @@
+ * Normalize log usage & names in instances, consoles, etc...
+ * Log output line by line, not at each byte array received.
+ * Handle non-0 return codes, raise an exception with last log
+   lines maybe.
+ * Add a 'step' scope manager that describe a step that can be used
+   to split log (in gui for example).
+ * Add a scope option on InstanceConsole to disable logging on stderr, stdout
+   or both (to allow reading stdout for example)
+ * Add a bash wrapper helper.
+ * Think about 'component' system, to configure DNS for hosts, or http proxy
+ * for example.

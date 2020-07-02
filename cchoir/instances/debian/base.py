@@ -1,4 +1,4 @@
-'''Empty debian container instance template.'''
+"""Empty debian container instance template."""
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 from typing import List
