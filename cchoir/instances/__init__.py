@@ -1,1 +1,1 @@
-"""Packages of predefined instances types for CChoir."""
+"""Predefined cchoir instances."""

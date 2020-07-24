@@ -16,5 +16,4 @@ class DeployCommand(Command):
 
     async def run(self, arguments: Namespace) -> bool:
         site = load_site(arguments)
-        await site.deploy()
-        return True
+        return await site.deploy()

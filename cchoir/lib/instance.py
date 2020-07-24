@@ -2,15 +2,17 @@
 from abc import ABC
 from abc import abstractmethod
 from contextlib import asynccontextmanager
-from logging import getLogger
 from logging import Logger
+from logging import getLogger
 from typing import AsyncIterator
+from typing import Optional
 
 from aiolxd import Api
 from aiolxd import Source
 from pofy import StringField
 
-from cchoir.lib.instance_console import InstanceConsole
+from cchoir.lib.console import Console
+from cchoir.lib.log import Log
 
 
 class Instance(ABC):
@@ -20,6 +22,16 @@ class Instance(ABC):
         """Pofy fields."""
 
         name = StringField(required=True)
+
+        @classmethod
+        def post_load(cls, instance: 'Instance') -> None:
+            """Set up the log when the instance is loaded from YAML.
+
+            Needed as the name member is defined in YAML.
+
+            """
+            instance.log = Log('instances.{}'.format(instance.name))
+            instance._post_load() # pylint: disable=protected-access
 
     def __init__(self) -> None:
         """Initialize the instance."""
@@ -53,17 +65,21 @@ class Instance(ABC):
         if lxd_instance.status != 'Running':
             await lxd_instance.start()
 
-        console = InstanceConsole(lxd_instance)
+        assert self.log is not None
+        console = Console(lxd_instance, self.log)
         async with self._setup(console):
             async with self._update(console):
                 pass
 
+    def _post_load(self) -> None:
+        pass
+
     @abstractmethod
     @asynccontextmanager
-    async def _setup(self, shell: InstanceConsole) -> AsyncIterator[None]:
+    async def _setup(self, shell: Console) -> AsyncIterator[None]:
         yield
 
     @abstractmethod
     @asynccontextmanager
-    async def _update(self, shell: InstanceConsole) -> AsyncIterator[None]:
+    async def _update(self, shell: Console) -> AsyncIterator[None]:
         yield
