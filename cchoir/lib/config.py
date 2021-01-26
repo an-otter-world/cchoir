@@ -1,6 +1,10 @@
 """Config helpers."""
-from pathlib import Path
 from logging import getLogger
+from pathlib import Path
+
+# As the import is used in a string for the typing system, pylint incorrectly
+# sees it as unused
+from typing import Optional # pylint: disable=unused-import
 
 from appdirs import user_config_dir
 from pofy import load
