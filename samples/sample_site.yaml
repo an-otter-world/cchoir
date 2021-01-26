@@ -1,3 +1,4 @@
+name: sample_site
 hosts:
   host_1:
     instances:

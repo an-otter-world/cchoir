@@ -30,7 +30,6 @@ class Instance(ABC):
             Needed as the name member is defined in YAML.
 
             """
-            instance.log = Log('instances.{}'.format(instance.name))
             instance._post_load() # pylint: disable=protected-access
 
     def __init__(self) -> None:
