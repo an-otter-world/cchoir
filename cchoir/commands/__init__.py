@@ -5,12 +5,15 @@ from gettext import gettext as _
 from typing import List
 from typing import Tuple
 
+from cchoir.commands.cert import CertCommand
 from cchoir.commands.command import Command
 from cchoir.commands.common import configure_common_arguments
+from cchoir.commands.common import configure_subcommands
+from cchoir.commands.common import run_subcommand
 from cchoir.commands.deploy import DeployCommand
 
 
-def configure(arguments: List[str]) -> Tuple[Command, Namespace]:
+async def run(arguments: List[str]) -> bool:
     """Load command line argument parser and parse arguments.
 
     Args:
@@ -26,26 +29,10 @@ def configure(arguments: List[str]) -> Tuple[Command, Namespace]:
     configure_common_arguments(parser)
 
     commands = [
-        DeployCommand()
+        CertCommand(),
+        DeployCommand(),
     ]
 
-    command_index = {it.name: it for it in commands}
-
-    subparsers = parser.add_subparsers(
-        help='C-Choir command to run.',
-        dest='selected_command',
-    )
-
-    for command_it in commands:
-        command_parser = subparsers.add_parser(
-            name=command_it.name,
-            description=command_it.__class__.__doc__,
-            help=command_it.__class__.__doc__,
-        )
-        command_it.configure(command_parser)
-
+    configure_subcommands(commands, parser, 'cchoir')
     parsed_args = parser.parse_args(arguments)
-    command_name = parsed_args.selected_command
-    command = command_index[command_name]
-
-    return (command, parsed_args)
+    return await run_subcommand(commands, parsed_args, 'cchoir')

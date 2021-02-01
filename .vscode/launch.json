@@ -20,7 +20,10 @@
             "justMyCode":false,
             "args": [
                 "--site", "${workspaceFolder}/samples/sample_site.yaml"
-                "deploy",
+                "cert",
+                "trust",
+                "--trust-password"
+                "PASSWORD"
             ]
         },
     ]

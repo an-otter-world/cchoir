@@ -3,11 +3,12 @@ from asyncio import gather
 from gettext import gettext as _
 from logging import getLogger
 from pathlib import Path
-from typing import cast
 from typing import Dict
 from typing import Iterable
 from typing import Optional
 from typing import Pattern
+from typing import Set
+from typing import cast
 
 from pofy import DictField
 from pofy import ObjectField
@@ -64,6 +65,30 @@ class Site:
 
         return True
 
+    async def trust(
+        self,
+        hosts: Set[str],
+        trust_password: Optional[str] = None
+    ) -> bool:
+        """Add the local certificate to the trusted ones the specified hosts.
+
+        Args:
+            hosts: Set of hosts for which to add certificate as trusted.
+            trust_password: LXD trust password.
+
+        """
+        config = Config.load()
+
+        if config is None:
+            return False
+
+        await gather(*[
+            host.trust(config, trust_password=trust_password)
+            for host in self.get_hosts(hosts)
+        ])
+
+        return True
+
     def get_hosts(self, names: Optional[Iterable[str]] = None) \
             -> Iterable[Host]:
         """Get hosts with the given names.
@@ -86,4 +111,5 @@ class Site:
                 _LOG.error(_("Unknown host {}"), name_it)
                 continue
             result.append(host)
+
         return result

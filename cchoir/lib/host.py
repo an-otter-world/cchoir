@@ -48,6 +48,22 @@ class Host:
                 if pattern is None or pattern.match(instance.name)
             ])
 
+    async def trust(
+        self,
+        config: Config,
+        trust_password: Optional[str] = None
+    ) \
+            -> None:
+        """Add the current certificate to the trusted ones."""
+        async with self._get_api(config) as api:
+            if api.is_client_trusted:
+                return False
+
+            await api.add_certificate(
+                cert_path=config.certificate,
+                password=trust_password
+            )
+
     @asynccontextmanager
     async def _get_api(self, config: Config) -> Api:
         async with lxd_api(

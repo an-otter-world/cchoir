@@ -9,6 +9,8 @@ from typing import Optional # pylint: disable=unused-import
 from appdirs import user_config_dir
 from pofy import load
 
+_LOG = getLogger(__name__)
+
 
 # TODO: Rename this to LocalConfig, it's confusing.
 class Config:
@@ -28,25 +30,7 @@ class Config:
 
         assert isinstance(config, Config)
 
-        logger = getLogger('cchoir.core')
-        if not config.key.exists():
-            logger.error(
-                'Unable to find your client certificate key %s to'
-                ' authenticate to the LXD api, please save before'
-                ' launching C-Choir',
-                config.key
-            )
-            return None
-        if not config.certificate.exists():
-            logger.error(
-                'Unable to find your client certificate key %s to'
-                ' authenticate to the LXD api, please save before'
-                ' launching C-Choir',
-                config.certificate
-            )
-            return None
-
-        logger.debug('Loaded config file')
+        _LOG.debug('Loaded config file')
         return config
 
     def __init__(self) -> None:
@@ -56,6 +40,28 @@ class Config:
         """
         self.certificate: Path = self._get_config_dir() / 'certificate.pem'
         self.key: Path = self._get_config_dir() / 'key.pem'
+
+    def check_certificate(self) -> bool:
+        """Check for the existence and validity of the certificate."""
+        if not self.key.exists():
+            _LOG.error(
+                'Unable to find your client certificate key %s to'
+                ' authenticate to the LXD api, please save before'
+                ' launching C-Choir',
+                self.key
+            )
+            return False
+
+        if not self.certificate.exists():
+            _LOG.error(
+                'Unable to find your client certificate key %s to'
+                ' authenticate to the LXD api, please save before'
+                ' launching C-Choir',
+                self.certificate
+            )
+            return False
+
+        return True
 
     @staticmethod
     def _get_config_dir() -> Path:

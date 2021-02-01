@@ -5,14 +5,19 @@ from logging import INFO
 from sys import argv
 from sys import exit as sys_exit
 
-from cchoir.commands import configure
+from cchoir.commands.cert import CertCommand
+from cchoir.commands.deploy import DeployCommand
+from cchoir.commands.common import run as run_command
 
 
 def main() -> int:
     """C-Choir entry point."""
     basicConfig(level=INFO)
-    command, arguments = configure(argv[1:])
-    if run(command.run(arguments)):
+    if run(run_command(
+        argv[1:],
+        CertCommand(),
+        DeployCommand()
+    )):
         return 0
 
     return 1
